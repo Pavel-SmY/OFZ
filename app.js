@@ -30,25 +30,18 @@ function updateHeroStats() {
 }
 
 /* LOAD OFZ */
-async function fetchJson(url) {
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
-  }
-  return res.json();
-}
-
 async function loadOFZ() {
+  const url = "ofz-data.json";
+
   const tbody = document.getElementById("ofzTable");
 
   try {
-    let json;
-
-    try {
-      json = await fetchJson("/api/ofz");
-    } catch (err) {
-      json = await fetchJson("ofz-data.json");
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
     }
+
+    const json = await res.json();
 
     const cols = json.securities.columns;
     const rows = json.securities.data;
@@ -87,8 +80,7 @@ async function loadOFZ() {
       tbody.innerHTML = `
         <tr>
           <td colspan="6">
-            Не удалось загрузить данные ОФЗ. Запустите сервер node server.js
-            или обновите файл ofz-data.json.
+            Не удалось загрузить локальный файл ofz-data.json.
           </td>
         </tr>`;
     }
