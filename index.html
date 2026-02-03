@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>ОФЗ для начинающих — простой гид</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <h2 class="logo">ОФЗ</h2>
+      <nav>
+        <a href="#about">Что такое ОФЗ</a>
+        <a href="#catalog">Каталог</a>
+        <a href="#map">Карта доходностей</a>
+        <a href="#select">Подбор</a>
+        <a href="#iis">ИИС</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="content">
+
+      <!-- HERO -->
+      <section class="hero">
+        <h1>Облигации федерального займа</h1>
+        <p class="subtitle">
+          Простой и надёжный способ сохранить деньги и получать доход без лишнего риска
+        </p>
+
+        <div class="stats">
+          <div class="stat">🏛 Госдолг РФ</div>
+          <div class="stat">💰 Купонный доход</div>
+          <div class="stat">🛡 Низкий риск</div>
+          <div class="stat">📊 MOEX</div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about" class="card">
+        <h2>Что такое ОФЗ и зачем они нужны</h2>
+        <p>
+          ОФЗ — это государственные облигации Российской Федерации.
+          Покупая ОФЗ, вы фактически даёте деньги в долг государству и получаете:
+        </p>
+
+        <div class="features">
+          <div class="feature">📄 Облигация — долговая расписка</div>
+          <div class="feature">💵 Купон — регулярный доход</div>
+          <div class="feature">🔁 Номинал — деньги вернут в конце</div>
+        </div>
+      </section>
+
+      <!-- CATALOG -->
+      <section id="catalog" class="card">
+        <h2>Каталог ОФЗ</h2>
+        <p class="hint">Реальные данные Московской биржи</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Выпуск</th>
+              <th>Погашение</th>
+              <th>Купон</th>
+              <th>Цена</th>
+              <th>YTM</th>
+            </tr>
+          </thead>
+          <tbody id="ofzTable">
+            <tr><td colspan="5">Загрузка данных…</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- MAP -->
+      <section id="map" class="card">
+        <h2>Карта доходностей ОФЗ</h2>
+        <p class="hint">
+          Каждая точка — отдельный выпуск ОФЗ.
+          Слева — короткие, справа — длинные облигации.
+        </p>
+        <canvas id="mapChart"></canvas>
+      </section>
+
+      <!-- SELECT -->
+      <section id="select" class="card">
+        <h2>Подбор ОФЗ для новичка</h2>
+
+        <div class="form">
+          <label>
+            Срок
+            <select id="term">
+              <option value="1">До 1 года</option>
+              <option value="3">До 3 лет</option>
+              <option value="5">До 5 лет</option>
+            </select>
+          </label>
+
+          <button onclick="selectOFZ()">Подобрать</button>
+        </div>
+
+        <div id="selectResult" class="result"></div>
+      </section>
+
+      <!-- IIS -->
+      <section id="iis" class="card">
+        <h2>ИИС и налоговые льготы</h2>
+        <p>
+          Купонный доход по ОФЗ облагается НДФЛ 13%.
+          Но при использовании ИИС типа А можно вернуть
+          до <strong>52 000 ₽ в год</strong>.
+        </p>
+
+        <p class="example">
+          Пример: вы вложили 400 000 ₽ → получили налоговый вычет 52 000 ₽.
+        </p>
+      </section>
+
+      <footer>
+        Источник данных: Московская биржа (ISS API)  
+        <br/>Материал носит информационный характер
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
