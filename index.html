@@ -2,69 +2,61 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>ОФЗ Dashboard</title>
+  <title>ОФЗ — облигации федерального займа</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
-
 <body>
 
-<div class="app">
+<div class="layout">
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="brand">ОФЗ</div>
-
+    <div class="logo">ОФЗ</div>
     <nav>
-      <a href="#overview" class="active">Обзор</a>
+      <a href="#overview">Обзор</a>
       <a href="#catalog">Выпуски</a>
       <a href="#map">Карта доходности</a>
       <a href="#curve">Кривая ЦБ</a>
-      <a href="#wizard">Подбор</a>
-      <a href="#iia">ИИС</a>
+      <a href="#picker">Подбор</a>
+      <a href="#iis">ИИС</a>
       <a href="#sources">Источники</a>
     </nav>
   </aside>
 
   <!-- MAIN -->
-  <main class="main">
-
-    <!-- HEADER -->
-    <header class="topbar">
-      <h1>Облигации федерального займа</h1>
-      <span class="badge">MOEX · ЦБ РФ</span>
-    </header>
+  <main class="content">
 
     <!-- OVERVIEW -->
-    <section class="grid kpi" id="overview">
-      <div class="kpi-card">
-        <span>Надёжность</span>
-        <strong>Госдолг РФ</strong>
-      </div>
-      <div class="kpi-card">
-        <span>Тип дохода</span>
-        <strong>Купоны</strong>
-      </div>
-      <div class="kpi-card">
-        <span>Риск</span>
-        <strong>Низкий</strong>
-      </div>
-      <div class="kpi-card">
-        <span>Источник</span>
-        <strong>MOEX</strong>
+    <section id="overview">
+      <h1>Облигации федерального займа</h1>
+
+      <div class="cards">
+        <div class="card">
+          <span>Надёжность</span>
+          <strong>Госдолг РФ</strong>
+        </div>
+        <div class="card">
+          <span>Доход</span>
+          <strong>Купоны</strong>
+        </div>
+        <div class="card">
+          <span>Риск</span>
+          <strong>Низкий</strong>
+        </div>
+        <div class="card">
+          <span>Источник</span>
+          <strong>MOEX</strong>
+        </div>
       </div>
     </section>
 
-    <!-- TABLE -->
-    <section class="card" id="catalog">
-      <div class="card-head">
-        <h2>Каталог ОФЗ</h2>
-        <span class="muted">Реальные рыночные данные</span>
-      </div>
-
-      <table id="ofzTable">
+    <!-- CATALOG -->
+    <section id="catalog">
+      <h2>Каталог ОФЗ</h2>
+      <table>
         <thead>
           <tr>
             <th>Выпуск</th>
@@ -72,93 +64,58 @@
             <th>Купон</th>
             <th>Цена</th>
             <th>YTM</th>
-            <th></th>
           </tr>
         </thead>
-        <tbody>
-          <tr><td colspan="6">Загрузка…</td></tr>
+        <tbody id="ofzTable">
+          <tr><td colspan="5">Загрузка данных…</td></tr>
         </tbody>
       </table>
     </section>
 
-    <!-- CALCULATOR -->
-    <section id="calcCard" class="card hidden">
-      <h2>Доходность выпуска</h2>
-
-      <div class="stats">
-        <div><span>Выпуск</span><strong id="calcSecid">—</strong></div>
-        <div><span>Купон</span><strong id="calcCoupon">—</strong></div>
-        <div><span>Срок</span><strong id="calcYears">—</strong></div>
-      </div>
-
-      <div class="calc-row">
-        <input id="calcPrice" type="number" step="0.01" />
-        <button id="calcBtn">Рассчитать</button>
-      </div>
-
-      <div id="calcResult" class="result-box"></div>
+    <!-- MAP -->
+    <section id="map">
+      <h2>Карта ОФЗ</h2>
+      <canvas id="mapChart"></canvas>
     </section>
 
-    <!-- CHARTS -->
-    <section class="grid charts">
-      <div class="card" id="map">
-        <h3>Карта ОФЗ</h3>
-        <canvas id="ofzMap"></canvas>
-      </div>
-
-      <div class="card" id="curve">
-        <h3>Кривая доходности ЦБ</h3>
-        <canvas id="cbCurve"></canvas>
-      </div>
+    <!-- CURVE -->
+    <section id="curve">
+      <h2>Кривая доходности ЦБ РФ</h2>
+      <canvas id="curveChart"></canvas>
     </section>
 
-    <!-- WIZARD -->
-    <section class="card" id="wizard">
+    <!-- PICKER -->
+    <section id="picker">
       <h2>Подбор ОФЗ</h2>
 
-      <div class="wizard">
-        <select id="wTerm">
+      <div class="picker">
+        <select id="term">
           <option value="1">До 1 года</option>
           <option value="3">1–3 года</option>
           <option value="5">3–5 лет</option>
-          <option value="10">5+ лет</option>
+          <option value="10">Более 5 лет</option>
         </select>
 
-        <select id="wInflation">
-          <option value="no">Без защиты от инфляции</option>
-          <option value="yes">С защитой</option>
-        </select>
-
-        <button id="wizardBtn">Подобрать</button>
+        <button id="pickBtn">Подобрать</button>
       </div>
 
-      <div id="wizardResult"></div>
+      <div id="pickResult" class="result"></div>
     </section>
 
-    <!-- IIA -->
-    <section class="card" id="iia">
-      <h2>ИИС</h2>
-
-      <div class="wizard">
-        <input id="iiaAmount" type="number" value="400000" />
-        <select id="iiaYears">
-          <option value="3">3 года</option>
-          <option value="5">5 лет</option>
-          <option value="10">10 лет</option>
-        </select>
-        <select id="iiaType">
-          <option value="A">Тип А</option>
-          <option value="B">Тип Б</option>
-        </select>
-        <button id="iiaCalcBtn">Рассчитать</button>
-      </div>
-
-      <div id="iiaResult"></div>
+    <!-- IIS -->
+    <section id="iis">
+      <h2>ИИС и налоговые льготы</h2>
+      <p>
+        Купонный доход по ОФЗ облагается НДФЛ 13%.  
+        При использовании ИИС типа А можно вернуть до 52 000 ₽ в год.
+      </p>
     </section>
 
     <!-- SOURCES -->
-    <section class="card muted" id="sources">
-      Источники: Московская биржа (ISS API), Банк России
+    <section id="sources">
+      <p class="sources">
+        Источники данных: Московская биржа (ISS API), Банк России
+      </p>
     </section>
 
   </main>
