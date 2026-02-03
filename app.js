@@ -2,7 +2,7 @@ let ofzData = [];
 
 async function loadOFZ() {
   const url =
-    'https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?iss.meta=off&iss.only=securities,marketdata';
+    "https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?iss.meta=off&iss.only=securities,marketdata";
 
   const res = await fetch(url);
   const json = await res.json();
@@ -12,80 +12,105 @@ async function loadOFZ() {
   const mdCols = json.marketdata.columns;
   const mdRows = json.marketdata.data;
 
-  const secidI = secCols.indexOf('SECID');
-  const matI = secCols.indexOf('MATDATE');
-  const nameI = secCols.indexOf('SHORTNAME');
+  const iSec = name => secCols.indexOf(name);
+  const iMd = name => mdCols.indexOf(name);
 
-  const priceI = mdCols.indexOf('LAST');
-  const ytmI = mdCols.indexOf('YIELD');
+  const today = new Date();
 
-  ofzData = secRows.map((r, i) => ({
-    secid: r[secidI],
-    matdate: r[matI],
-    name: r[nameI],
-    price: mdRows[i]?.[priceI],
-    ytm: mdRows[i]?.[ytmI]
-  })).filter(o => o.matdate && o.ytm);
+  ofzData = secRows.map((r, idx) => {
+    const mat = r[iSec("MATDATE")];
+    const years =
+      mat ? (new Date(mat) - today) / (365 * 24 * 3600 * 1000) : null;
+
+    return {
+      secid: r[iSec("SECID")],
+      maturity: mat,
+      yearsToMaturity: years,
+      price: mdRows[idx]?.[iMd("LAST")],
+      ytm: mdRows[idx]?.[iMd("YIELD")]
+    };
+  }).filter(b => b.ytm && b.yearsToMaturity > 0);
 
   renderTable();
   buildMap();
 }
 
 function renderTable() {
-  const tbody = document.getElementById('ofzTable');
-  tbody.innerHTML = '';
+  const tbody = document.getElementById("ofzTable");
+  tbody.innerHTML = "";
 
-  ofzData.slice(0, 15).forEach(o => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${o.secid}</td>
-      <td>${o.matdate}</td>
-      <td>${o.price?.toFixed(2) ?? '—'}</td>
-      <td>${o.ytm.toFixed(2)}%</td>
+  ofzData.slice(0, 20).forEach(b => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${b.secid}</td>
+        <td>${b.maturity}</td>
+        <td>${b.price?.toFixed(2) ?? "—"}</td>
+        <td>${b.ytm.toFixed(2)}%</td>
+      </tr>
     `;
-    tbody.appendChild(tr);
   });
 }
 
 function buildMap() {
-  const now = new Date();
+  const ctx = document.getElementById("ofzMap");
 
-  const points = ofzData.map(o => ({
-    x: (new Date(o.matdate) - now) / (365 * 24 * 3600 * 1000),
-    y: o.ytm
-  })).filter(p => p.x > 0 && p.x < 30);
-
-  new Chart(document.getElementById('mapChart'), {
-    type: 'scatter',
+  new Chart(ctx, {
+    type: "scatter",
     data: {
       datasets: [{
-        label: 'ОФЗ',
-        data: points,
-        backgroundColor: '#4f46e5'
+        label: "ОФЗ",
+        data: ofzData.map(b => ({
+          x: b.yearsToMaturity,
+          y: b.ytm,
+          secid: b.secid,
+          maturity: b.maturity
+        })),
+        backgroundColor: "#4f46e5"
       }]
     },
     options: {
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: c => {
+              const p = c.raw;
+              return [
+                `Выпуск: ${p.secid}`,
+                `Погашение: ${p.maturity}`,
+                `Доходность: ${p.y.toFixed(2)}%`
+              ];
+            }
+          }
+        }
+      },
       scales: {
-        x: { title: { display: true, text: 'Срок до погашения, лет' }},
-        y: { title: { display: true, text: 'Доходность YTM, %' }}
+        x: { title: { display: true, text: "Срок до погашения, лет" }},
+        y: { title: { display: true, text: "Доходность YTM, %" }}
       }
     }
   });
 }
 
-function selectOFZ() {
-  const limit = Number(document.getElementById('termSelect').value);
-  const now = new Date();
+function pickOFZ() {
+  const term = Number(document.getElementById("pickTerm").value);
+  const result = document.getElementById("pickResult");
 
-  const found = ofzData.filter(o => {
-    const years = (new Date(o.matdate) - now) / (365 * 24 * 3600 * 1000);
-    return years > 0 && years <= limit;
-  });
+  const found = ofzData
+    .filter(b => b.yearsToMaturity <= term)
+    .slice(0, 3);
 
-  const res = document.getElementById('selectResult');
-  res.innerText = found.length
-    ? `Подходит выпусков: ${found.length}. Например: ${found[0].secid}`
-    : 'Подходящих ОФЗ не найдено';
+  if (!found.length) {
+    result.innerText = "Подходящих ОФЗ не найдено.";
+    return;
+  }
+
+  result.innerHTML = found.map(b => `
+    <div>
+      <strong>${b.secid}</strong> —
+      погашение ${b.maturity},
+      доходность ${b.ytm.toFixed(2)}%
+    </div>
+  `).join("");
 }
 
 loadOFZ();
