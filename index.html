@@ -3,13 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <title>ОФЗ для начинающих — простой гид</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
+  <div class="app-gradient"></div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">ОФЗ</div>
+        <div class="brand-text">
+          <span>Гид по облигациям</span>
+          <small>для начинающих инвесторов</small>
+        </div>
+      </div>
+      <nav class="top-nav">
+        <a href="#about">ОФЗ</a>
+        <a href="#catalog">Каталог</a>
+        <a href="#map">Карта</a>
+        <a href="#select">Подбор</a>
+        <a href="#iis">ИИС</a>
+      </nav>
+    </div>
+  </header>
+
   <div class="layout">
     <!-- SIDEBAR -->
     <aside class="sidebar">
@@ -28,16 +49,50 @@
 
       <!-- HERO -->
       <section class="hero">
-        <h1>Облигации федерального займа</h1>
-        <p class="subtitle">
-          Простой и надёжный способ сохранить деньги и получать доход без лишнего риска
-        </p>
+        <div class="hero-text">
+          <h1>ОФЗ: надёжный старт в инвестировании</h1>
+          <p class="subtitle">
+            Государственные облигации c понятным риском и прогнозируемым доходом.
+            Инструмент, который подходит тем, кто хочет сохранить и приумножить капитал.
+          </p>
 
-        <div class="stats">
-          <div class="stat">🏛 Госдолг РФ</div>
-          <div class="stat">💰 Купонный доход</div>
-          <div class="stat">🛡 Низкий риск</div>
-          <div class="stat">📊 MOEX</div>
+          <div class="hero-badges">
+            <span class="badge badge-green">Надёжность государства</span>
+            <span class="badge badge-purple">Реальные котировки MOEX</span>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <span class="stat-label">Надёжность</span>
+              <strong>Госдолг РФ</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Доход</span>
+              <strong>Купонные выплаты</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Риск</span>
+              <strong>Низкий</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Площадка</span>
+              <strong>MOEX</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-card">
+            <div class="hero-card-header">
+              <span>Портфель ОФЗ</span>
+              <span class="pill">демо</span>
+            </div>
+            <div class="hero-card-body">
+              <div class="hero-figure hero-figure-1"></div>
+              <div class="hero-figure hero-figure-2"></div>
+              <p>Стабильный купонный поток и защита капитала.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -50,18 +105,35 @@
         </p>
 
         <div class="features">
-          <div class="feature">📄 Облигация — долговая расписка</div>
-          <div class="feature">💵 Купон — регулярный доход</div>
-          <div class="feature">🔁 Номинал — деньги вернут в конце</div>
+          <div class="feature">
+            <div class="feature-icon feature-blue"></div>
+            <h3>Облигация</h3>
+            <p>Долговая расписка государства с фиксированными условиями.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon feature-purple"></div>
+            <h3>Купон</h3>
+            <p>Регулярные выплаты процентов на ваш брокерский счёт.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon feature-green"></div>
+            <h3>Номинал</h3>
+            <p>Сумма, которую вы получите обратно в дату погашения.</p>
+          </div>
         </div>
       </section>
 
       <!-- CATALOG -->
       <section id="catalog" class="card">
-        <h2>Каталог ОФЗ</h2>
-        <p class="hint">Реальные данные Московской биржи</p>
+        <div class="card-header">
+          <div>
+            <h2>Каталог ОФЗ</h2>
+            <p class="hint">Реальные данные Московской биржи</p>
+          </div>
+          <div class="chip chip-live">Данные онлайн</div>
+        </div>
 
-        <table>
+        <table class="data-table">
           <thead>
             <tr>
               <th>Выпуск</th>
@@ -79,12 +151,18 @@
 
       <!-- MAP -->
       <section id="map" class="card">
-        <h2>Карта доходностей ОФЗ</h2>
-        <p class="hint">
-          Каждая точка — отдельный выпуск ОФЗ.
-          Слева — короткие, справа — длинные облигации.
-        </p>
-        <canvas id="mapChart"></canvas>
+        <div class="card-header">
+          <div>
+            <h2>Карта доходностей ОФЗ</h2>
+            <p class="hint">
+              Каждая точка — отдельный выпуск ОФЗ.
+              Слева — короткие, справа — длинные облигации.
+            </p>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="mapChart"></canvas>
+        </div>
       </section>
 
       <!-- SELECT -->
@@ -93,7 +171,7 @@
 
         <div class="form">
           <label>
-            Срок
+            Срок инвестиций
             <select id="term">
               <option value="1">До 1 года</option>
               <option value="3">До 3 лет</option>
@@ -101,29 +179,37 @@
             </select>
           </label>
 
-          <button onclick="selectOFZ()">Подобрать</button>
+          <button class="primary-btn" onclick="selectOFZ()">Подобрать</button>
         </div>
 
         <div id="selectResult" class="result"></div>
       </section>
 
       <!-- IIS -->
-      <section id="iis" class="card">
-        <h2>ИИС и налоговые льготы</h2>
-        <p>
-          Купонный доход по ОФЗ облагается НДФЛ 13%.
-          Но при использовании ИИС типа А можно вернуть
-          до <strong>52 000 ₽ в год</strong>.
-        </p>
+      <section id="iis" class="card card-gradient">
+        <div class="card-header">
+          <div>
+            <h2>ИИС и налоговые льготы</h2>
+            <p class="hint">
+              Купонный доход по ОФЗ облагается НДФЛ 13%, но ИИС помогает вернуть часть налога.
+            </p>
+          </div>
+        </div>
 
-        <p class="example">
-          Пример: вы вложили 400 000 ₽ → получили налоговый вычет 52 000 ₽.
-        </p>
+        <div class="iis-grid">
+          <div class="iis-block">
+            <h3>ИИС типа А</h3>
+            <p>Возврат НДФЛ до 52 000 ₽ в год с вложенных 400 000 ₽.</p>
+          </div>
+          <div class="iis-block iis-block-outline">
+            <h3>ИИС + ОФЗ</h3>
+            <p>Купонный доход + налоговый вычет → доходность выше вклада.</p>
+          </div>
+        </div>
       </section>
 
-      <footer>
-        Источник данных: Московская биржа (ISS API)  
-        <br/>Материал носит информационный характер
+      <footer class="footer">
+        Источник данных: Московская биржа (ISS API) · Материал носит информационный характер
       </footer>
     </main>
   </div>
