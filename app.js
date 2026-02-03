@@ -25,16 +25,19 @@ async function loadOFZ() {
     const iMat = cols.indexOf("MATDATE");
     const iCup = cols.indexOf("COUPONRATE");
     const iPrice = cols.indexOf("PREVPRICE");
-    const iYTM = cols.indexOf("YIELDTOMATURITY");
+    let iYTM = cols.indexOf("YIELDTOMATURITY");
+    if (iYTM === -1) {
+      iYTM = cols.indexOf("YIELD");
+    }
 
     ofzData = rows
-      .filter(r => r[iYTM])
+      .filter(r => r[iSec]?.startsWith("SU") && r[iYTM] != null)
       .map(r => ({
         secid: r[iSec],
         mat: r[iMat],
         coupon: r[iCup],
         price: r[iPrice],
-        ytm: r[iYTM]
+        ytm: Number(r[iYTM])
       }));
 
     renderTable();
