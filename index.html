@@ -2,104 +2,203 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>ОФЗ — облигации федерального займа</title>
+  <title>ОФЗ для начинающих</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 </head>
-
 <body>
-  <div class="layout">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <h2 class="logo">ОФЗ</h2>
-      <nav>
-        <a href="#overview">Обзор</a>
-        <a href="#catalog">Выпуски</a>
-        <a href="#map">Карта доходности</a>
-        <a href="#curve">Кривая ЦБ</a>
-        <a href="#select">Подбор</a>
-        <a href="#iis">ИИС</a>
-      </nav>
-    </aside>
+<div class="layout">
 
-    <!-- MAIN -->
-    <main class="content">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">ОФЗ</h2>
+    <nav>
+      <a href="#hero">Обзор</a>
+      <a href="#education">Обучение</a>
+      <a href="#types">Виды ОФЗ</a>
+      <a href="#scenarios">Сценарии</a>
+      <a href="#catalog">Каталог</a>
+      <a href="#map">Карта доходности</a>
+      <a href="#select">Подбор</a>
+    </nav>
+  </aside>
 
-      <!-- OVERVIEW -->
-      <section id="overview" class="card">
-        <h1>Облигации федерального займа</h1>
+  <!-- CONTENT -->
+  <main class="content">
 
-        <div class="stats">
-          <div class="stat"><span>Надёжность</span><b>Госдолг РФ</b></div>
-          <div class="stat"><span>Доход</span><b>Купоны</b></div>
-          <div class="stat"><span>Риск</span><b>Низкий</b></div>
-          <div class="stat"><span>Источник</span><b>MOEX</b></div>
+    <!-- HERO -->
+    <section id="hero" class="card hero">
+      <h1>Облигации федерального займа</h1>
+      <p class="subtitle">
+        Простой и надёжный инструмент для сохранения капитала и предсказуемого дохода
+      </p>
+
+      <div class="stats">
+        <div class="stat"><span>Надёжность</span><b>Госдолг РФ</b></div>
+        <div class="stat"><span>Доход</span><b>Купоны</b></div>
+        <div class="stat"><span>Риск</span><b>Низкий</b></div>
+        <div class="stat"><span>Источник</span><b>MOEX</b></div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education" class="card">
+      <h2>Что важно знать новичку</h2>
+
+      <div class="grid-3">
+        <div class="info">
+          <h3>Что такое облигация</h3>
+          <p>
+            Облигация — это займ. Вы даёте деньги в долг и заранее знаете,
+            когда их вернут и какой доход получите.
+          </p>
         </div>
-      </section>
 
-      <!-- CATALOG -->
-      <section id="catalog" class="card">
-        <h2>Каталог ОФЗ</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Выпуск</th>
-              <th>Погашение</th>
-              <th>Купон</th>
-              <th>Цена</th>
-              <th>YTM</th>
-            </tr>
-          </thead>
-          <tbody id="ofzTable">
-            <tr><td colspan="5">Загрузка данных…</td></tr>
-          </tbody>
-        </table>
-      </section>
+        <div class="info">
+          <h3>Что такое купон</h3>
+          <p>
+            Купон — это проценты, которые выплачиваются регулярно
+            за владение облигацией.
+          </p>
+        </div>
 
-      <!-- MAP -->
-      <section id="map" class="card">
-        <h2>Карта доходности ОФЗ</h2>
-        <canvas id="mapChart"></canvas>
-      </section>
+        <div class="info">
+          <h3>Доходность к погашению</h3>
+          <p>
+            Показывает реальную среднегодовую доходность,
+            если держать облигацию до конца срока.
+          </p>
+        </div>
+      </div>
+    </section>
 
-      <!-- CURVE -->
-      <section id="curve" class="card">
-        <h2>Кривая доходности ЦБ РФ</h2>
-        <canvas id="curveChart"></canvas>
-      </section>
+    <!-- TYPES -->
+    <section id="types" class="card">
+      <h2>Какие бывают ОФЗ</h2>
 
-      <!-- SELECT -->
-      <section id="select" class="card">
-        <h2>Подбор ОФЗ</h2>
-        <select id="termSelect">
-          <option value="1">До 1 года</option>
-          <option value="3">До 3 лет</option>
-          <option value="5">До 5 лет</option>
-          <option value="10">До 10 лет</option>
-        </select>
-        <button onclick="selectOFZ()">Подобрать</button>
-        <div id="selectResult"></div>
-      </section>
+      <div class="grid-4">
+        <div class="type">
+          <h3>Фиксированный купон</h3>
+          <p>Доход известен заранее и не меняется.</p>
+          <span>ОФЗ-ПД</span>
+        </div>
 
-      <!-- IIS -->
-      <section id="iis" class="card">
-        <h2>ИИС и налоговые льготы</h2>
-        <p>
-          Купонный доход по ОФЗ облагается НДФЛ 13%.  
-          При использовании ИИС типа А можно вернуть до <b>52 000 ₽</b> в год.
-        </p>
-      </section>
+        <div class="type">
+          <h3>Плавающий купон</h3>
+          <p>Доход зависит от рыночной ставки.</p>
+          <span>ОФЗ-ПК</span>
+        </div>
 
-      <footer class="footer">
-        Источники данных: Московская биржа (ISS API)
-      </footer>
+        <div class="type">
+          <h3>Защита от инфляции</h3>
+          <p>Номинал растёт вместе с инфляцией.</p>
+          <span>ОФЗ-ИН</span>
+        </div>
 
-    </main>
-  </div>
+        <div class="type">
+          <h3>Амортизация</h3>
+          <p>Деньги возвращаются частями.</p>
+          <span>ОФЗ-АД</span>
+        </div>
+      </div>
+    </section>
 
-  <script src="app.js"></script>
+    <!-- SCENARIOS -->
+    <section id="scenarios" class="card">
+      <h2>Сценарии и стратегии для новичков</h2>
+
+      <div class="grid-2">
+        <div class="scenario">
+          <h3>Припарковать деньги</h3>
+          <p>
+            Альтернатива вкладам. Доход выше,
+            деньги можно продать в любой момент.
+          </p>
+        </div>
+
+        <div class="scenario">
+          <h3>Первый шаг в инвестициях</h3>
+          <p>
+            Простая логика и понятный результат —
+            идеальный инструмент для обучения.
+          </p>
+        </div>
+
+        <div class="scenario">
+          <h3>Регулярный доход</h3>
+          <p>
+            Купоны выплачиваются несколько раз в год,
+            доход известен заранее.
+          </p>
+        </div>
+
+        <div class="scenario">
+          <h3>ИИС и налоговый вычет</h3>
+          <p>
+            ОФЗ часто используют на ИИС для получения
+            налогового вычета до 52 000 ₽ в год.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATALOG -->
+    <section id="catalog" class="card">
+      <h2>Каталог ОФЗ (Московская биржа)</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Выпуск</th>
+            <th>Погашение</th>
+            <th>Купон</th>
+            <th>Цена</th>
+            <th>YTM</th>
+          </tr>
+        </thead>
+        <tbody id="ofzTable">
+          <tr><td colspan="5">Загрузка данных…</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- MAP -->
+    <section id="map" class="card">
+      <h2>Карта доходности ОФЗ</h2>
+      <canvas id="mapChart"></canvas>
+      <p class="note">
+        Каждая точка — отдельный выпуск ОФЗ.
+        Слева — короткие, справа — длинные облигации.
+      </p>
+    </section>
+
+    <!-- SELECT -->
+    <section id="select" class="card">
+      <h2>Подбор ОФЗ для новичка</h2>
+
+      <select id="termSelect">
+        <option value="1">До 1 года</option>
+        <option value="3">До 3 лет</option>
+        <option value="5">До 5 лет</option>
+        <option value="10">До 10 лет</option>
+      </select>
+
+      <button onclick="selectOFZ()">Подобрать</button>
+
+      <div id="selectResult" class="note"></div>
+    </section>
+
+    <footer class="note">
+      Источники данных: Московская биржа (ISS API).  
+      Материал носит информационный характер.
+    </footer>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
