@@ -2,8 +2,10 @@ let ofzData = [];
 
 /* LOAD OFZ */
 async function loadOFZ() {
-  // Для GitHub Pages и любой статики берём данные из ofz-data.json (обновляется скриптом/CI)
-  const url = "ofz-data.json";
+  // Для GitHub Pages используем публичный CORS-прокси к MOEX
+  const moexUrl =
+    "https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?iss.meta=off";
+  const url = `https://corsproxy.io/?${encodeURIComponent(moexUrl)}`;
 
   const tbody = document.getElementById("ofzTable");
 
@@ -43,7 +45,7 @@ async function loadOFZ() {
       tbody.innerHTML = `
         <tr>
           <td colspan="5">
-            Не удалось загрузить локальный файл с данными ofz-data.json.
+            Не удалось загрузить данные с MOEX (CORS-прокси недоступен или сеть недоступна).
           </td>
         </tr>`;
     }
