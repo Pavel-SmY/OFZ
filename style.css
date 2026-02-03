@@ -729,6 +729,7 @@ body {
 }
 
 .layout {
+  display: block;
   max-width: 1200px;
   margin: 40px auto;
   padding: 24px 24px 48px;
@@ -757,25 +758,12 @@ body {
   color: #9ca3af;
 }
 
-.sidebar {
-  width: 72px;
-  padding: 8px 0 0;
-}
-
-.logo {
-  display: none;
-}
-
-.sidebar nav a {
-  text-align: center;
-  margin: 6px 0;
-  padding: 10px 0;
-  border-radius: 16px;
-  font-size: 12px;
-}
-
 .content {
-  padding-left: 24px;
+  padding-left: 0;
+}
+
+.sidebar {
+  display: none;
 }
 
 .hero {
