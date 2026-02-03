@@ -1,220 +1,178 @@
-/* =========================
-   Design system
-   ========================= */
-
-   :root {
-    --bg-page: #f6f7fb;
-    --bg-card: #ffffff;
-    --bg-soft: #f1f5f9;
-  
-    --text-main: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #64748b;
-  
-    --border: #e2e8f0;
-  
-    --primary: #2563eb;
-    --primary-soft: rgba(37, 99, 235, 0.08);
-    --success: #16a34a;
-  
-    --radius-xl: 16px;
-    --radius-lg: 12px;
-    --radius-md: 10px;
-  
-    --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.05);
-    --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+:root {
+    --bg: #f7f8fa;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --accent: #2563eb;
+    --border: #e5e7eb;
   }
   
-  /* =========================
-     Base
-     ========================= */
+  * { box-sizing: border-box; }
   
-  * {
-    box-sizing: border-box;
-  }
+  html { scroll-behavior: smooth; }
   
   body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Inter",
-                 "Segoe UI", Roboto, Arial, sans-serif;
-    background: var(--bg-page);
-    color: var(--text-main);
-    line-height: 1.65;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
   }
   
-  /* =========================
-     Layout
-     ========================= */
-  
   .container {
-    max-width: 1100px;
-    margin: 40px auto;
+    max-width: 1200px;
+    margin: auto;
     padding: 32px;
   }
   
-  /* =========================
-     Typography
-     ========================= */
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
   
-  h1 {
+  .nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 32px;
+  }
+  
+  .logo {
+    font-weight: 700;
+    color: var(--accent);
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  
+  .nav-links a:hover {
+    color: var(--accent);
+  }
+  
+  /* HERO */
+  .hero {
+    padding: 72px 32px;
+    background: linear-gradient(180deg, #fff, #f7f8fa);
+  }
+  
+  .badge {
+    background: #e0e7ff;
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+  
+  .hero h1 {
     font-size: 40px;
-    letter-spacing: -0.02em;
-    margin-bottom: 16px;
+    margin: 16px 0;
   }
   
-  h2 {
-    font-size: 22px;
-    margin-bottom: 12px;
-    letter-spacing: -0.01em;
-  }
-  
-  .intro {
+  .hero-text {
     font-size: 18px;
-    color: var(--text-secondary);
+    color: var(--muted);
     max-width: 700px;
   }
   
-  /* =========================
-     Sections as cards
-     ========================= */
-  
-  section {
-    background: var(--bg-card);
-    border-radius: var(--radius-xl);
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border-radius: 16px;
     padding: 28px;
     margin-top: 32px;
-    box-shadow: var(--shadow-sm);
   }
   
-  /* =========================
-     Tables
-     ========================= */
+  .small { padding: 20px; }
   
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap: 16px;
+  }
+  
+  h2 { margin-top: 0; }
+  
+  .muted { color: var(--muted); }
+  
+  /* TABLE */
   table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 16px;
-    font-size: 14px;
   }
   
-  th {
-    text-align: left;
-    font-weight: 600;
-    color: var(--text-muted);
-    padding: 12px 10px;
+  th, td {
+    padding: 12px;
     border-bottom: 1px solid var(--border);
   }
   
-  td {
-    padding: 14px 10px;
-    border-bottom: 1px solid var(--border);
+  /* CALC */
+  .stats {
+    display: flex;
+    gap: 24px;
+    margin: 16px 0;
   }
   
-  tr:hover {
-    background: var(--bg-soft);
+  .stats span {
+    font-size: 12px;
+    color: var(--muted);
   }
   
-  /* =========================
-     Buttons
-     ========================= */
-  
-  button {
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    font-size: 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  button:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-  }
-  
-  /* =========================
-     Calculator
-     ========================= */
-  
-  .calculator {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  .input-row {
+    display: flex;
     gap: 16px;
-    margin-top: 16px;
+    align-items: flex-end;
   }
   
-  .calculator label {
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-  
-  .calculator input {
-    width: 100%;
-    margin-top: 6px;
+  input, select {
     padding: 10px;
-    font-size: 14px;
     border-radius: 8px;
     border: 1px solid var(--border);
   }
   
-  .calculator input[readonly] {
-    background: var(--bg-soft);
+  button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
   }
   
-  .result {
-    grid-column: 1 / -1;
-    margin-top: 8px;
-    padding: 14px;
-    background: var(--primary-soft);
-    border-radius: 10px;
+  .result-box {
+    margin-top: 16px;
+    padding: 16px;
+    background: #eef2ff;
+    border-radius: 12px;
     font-weight: 600;
-    color: var(--primary);
   }
   
-  /* =========================
-     Charts
-     ========================= */
-  
-  canvas {
-    margin-top: 20px;
-    background: linear-gradient(
-      180deg,
-      rgba(37, 99, 235, 0.04),
-      transparent
-    );
-    border-radius: var(--radius-lg);
-    padding: 12px;
+  .wizard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap: 16px;
+    margin-top: 16px;
   }
   
-  /* =========================
-     Notes & footer
-     ========================= */
-  
-  .note {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 12px;
-  }
+  .hidden { display: none; }
   
   footer {
-    margin-top: 60px;
     text-align: center;
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-  
-  /* =========================
-     Responsive
-     ========================= */
-  
-  @media (max-width: 700px) {
-    h1 {
-      font-size: 30px;
-    }
-  
-    section {
-      padding: 20px;
-    }
+    padding: 32px;
+    color: var(--muted);
   }
