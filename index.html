@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>ОФЗ для начинающих — понятный гид</title>
+  <title>ОФЗ для начинающих — простой гид</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="style.css" />
@@ -14,15 +14,15 @@
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <h2 class="logo">ОФЗ</h2>
+    <div class="logo">ОФЗ</div>
     <nav>
-      <a href="#about">Обзор</a>
-      <a href="#education">Что такое облигации</a>
-      <a href="#types">Виды ОФЗ</a>
-      <a href="#map">Карта доходности</a>
-      <a href="#selector">Подбор ОФЗ</a>
-      <a href="#iis">ИИС и налоги</a>
+      <a href="#about">Что такое ОФЗ</a>
       <a href="#catalog">Каталог</a>
+      <a href="#types">Виды ОФЗ</a>
+      <a href="#map">Карта доходностей</a>
+      <a href="#select">Подбор</a>
+      <a href="#iis">ИИС</a>
+      <a href="#curve">Кривая доходности</a>
     </nav>
   </aside>
 
@@ -30,128 +30,138 @@
   <main class="content">
 
     <!-- HERO -->
-    <section class="hero" id="about">
+    <section class="hero">
       <h1>Облигации федерального займа</h1>
       <p class="subtitle">
-        Надёжный инструмент для сохранения и понятного дохода  
-        для начинающих инвесторов
+        Простой и понятный способ сохранить деньги, получать доход  
+        и начать инвестировать без лишнего риска
       </p>
 
       <div class="stats">
-        <div class="card">🛡 Госдолг РФ</div>
-        <div class="card">💰 Купонный доход</div>
-        <div class="card">📉 Низкий риск</div>
-        <div class="card">🏦 MOEX</div>
+        <div class="stat">🛡 Надёжность<br><strong>Госдолг РФ</strong></div>
+        <div class="stat">💰 Доход<br><strong>Купоны</strong></div>
+        <div class="stat">📉 Риск<br><strong>Низкий</strong></div>
+        <div class="stat">🏦 Источник<br><strong>MOEX</strong></div>
       </div>
     </section>
 
-    <!-- EDUCATION -->
-    <section id="education" class="block">
-      <h2>Что такое облигации</h2>
+    <!-- ABOUT -->
+    <section id="about" class="card">
+      <h2>Что такое ОФЗ и зачем они нужны</h2>
+      <p>
+        ОФЗ — это государственные облигации Российской Федерации.
+        Покупая ОФЗ, вы даёте деньги в долг государству и получаете
+        <strong>регулярный доход в виде купонов</strong>, а в конце срока —
+        <strong>возврат всей суммы</strong>.
+      </p>
+
       <div class="grid-3">
-        <div class="tile">📄<b>Облигация</b><p>Вы даёте деньги в долг</p></div>
-        <div class="tile">💸<b>Купон</b><p>Регулярные выплаты</p></div>
-        <div class="tile">🧾<b>Номинал</b><p>Что вернут в конце</p></div>
-        <div class="tile">📈<b>Доходность</b><p>Реальный % годовых</p></div>
-        <div class="tile">💱<b>Цена</b><p>Может быть выше или ниже</p></div>
-        <div class="tile">⏳<b>Срок</b><p>Дата возврата денег</p></div>
+        <div class="info">📄<br><strong>Облигация</strong><br>Долговая расписка государства</div>
+        <div class="info">💸<br><strong>Купон</strong><br>Проценты, которые платят вам</div>
+        <div class="info">🧾<br><strong>Номинал</strong><br>Сумма, которую вернут</div>
       </div>
+    </section>
+
+    <!-- CATALOG -->
+    <section id="catalog" class="card">
+      <h2>Каталог ОФЗ</h2>
+      <p class="muted">Реальные рыночные данные Московской биржи</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Выпуск</th>
+            <th>Погашение</th>
+            <th>Купон</th>
+            <th>Цена</th>
+            <th>YTM</th>
+          </tr>
+        </thead>
+        <tbody id="ofzTable">
+          <tr><td colspan="5">Загрузка данных…</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <!-- TYPES -->
-    <section id="types" class="block">
-      <h2>Виды ОФЗ</h2>
+    <section id="types" class="card">
+      <h2>Какие бывают ОФЗ</h2>
+
       <div class="grid-4">
-        <div class="type">ОФЗ-ПД<br><span>Фиксированный купон</span></div>
-        <div class="type">ОФЗ-ПК<br><span>Плавающий купон</span></div>
-        <div class="type">ОФЗ-ИН<br><span>Защита от инфляции</span></div>
-        <div class="type">ОФЗ-АД<br><span>Амортизация</span></div>
+        <div class="type">ОФЗ-ПД<br><small>Фиксированный купон</small></div>
+        <div class="type">ОФЗ-ПК<br><small>Плавающий купон</small></div>
+        <div class="type">ОФЗ-ИН<br><small>Защита от инфляции</small></div>
+        <div class="type">ОФЗ-АД<br><small>Амортизация</small></div>
       </div>
     </section>
 
     <!-- MAP -->
-    <section id="map" class="block">
+    <section id="map" class="card">
       <h2>Карта доходности ОФЗ</h2>
-      <p class="hint">
+      <p class="muted">
         Каждая точка — отдельный выпуск ОФЗ.  
-        Слева короткие, справа длинные облигации.
+        Слева — короткие, справа — длинные облигации.
       </p>
       <canvas id="mapChart"></canvas>
     </section>
 
-    <!-- SELECTOR -->
-    <section id="selector" class="block">
+    <!-- SELECT -->
+    <section id="select" class="card">
       <h2>Подбор ОФЗ для новичка</h2>
 
-      <div class="form">
-        <label>Сумма инвестиций
-          <input id="amount" type="number" value="500000">
+      <div class="selector">
+        <label>
+          Сумма инвестиций
+          <input type="number" id="amount" value="100000">
         </label>
 
-        <label>Срок
+        <label>
+          Срок
           <select id="term">
-            <option value="1">до 1 года</option>
-            <option value="3">1–3 года</option>
-            <option value="5">3–5 лет</option>
-            <option value="10">5+ лет</option>
-          </select>
-        </label>
-
-        <label>Купоны
-          <select id="couponFreq">
-            <option>Любая</option>
-            <option>2 раза в год</option>
-            <option>4 раза в год</option>
+            <option value="1">До 1 года</option>
+            <option value="3">До 3 лет</option>
+            <option value="5">До 5 лет</option>
           </select>
         </label>
 
         <button onclick="selectOFZ()">Подобрать</button>
       </div>
 
-      <div id="selectionResult" class="result"></div>
+      <div id="selectResult" class="result"></div>
     </section>
 
     <!-- IIS -->
-    <section id="iis" class="block">
+    <section id="iis" class="card accent">
       <h2>ИИС и налоговые льготы</h2>
+      <p>
+        Купонный доход по ОФЗ облагается НДФЛ 13%.  
+        Но с ИИС типа А можно вернуть до <strong>52 000 ₽ в год</strong>.
+      </p>
+
       <div class="grid-2">
-        <div class="tile">
-          💸 <b>ИИС тип А</b>
-          <p>Вложили 400 000 ₽ — вернули 52 000 ₽</p>
-        </div>
-        <div class="tile">
-          📈 <b>ОФЗ + ИИС</b>
-          <p>Купоны + налоговый вычет</p>
-        </div>
+        <div class="info">💰 Вложили 400 000 ₽<br>↩ Вернули 52 000 ₽</div>
+        <div class="info">📈 Купоны + вычет<br>Доход выше вклада</div>
       </div>
     </section>
 
-    <!-- CATALOG -->
-    <section id="catalog" class="block">
-      <h2>Каталог ОФЗ (MOEX)</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Выпуск</th>
-            <th>Погашение</th>
-            <th>Цена</th>
-            <th>Доходность</th>
-          </tr>
-        </thead>
-        <tbody id="ofzTable">
-          <tr><td colspan="4">Загрузка…</td></tr>
-        </tbody>
-      </table>
+    <!-- CURVE -->
+    <section id="curve" class="card">
+      <h2>Кривая доходности ОФЗ</h2>
+      <p class="muted">
+        Упрощённая кривая на основе рыночных доходностей.
+        Используется для понимания логики рынка.
+      </p>
+      <canvas id="curveChart"></canvas>
     </section>
 
-    <footer>
-      Источник данных: Московская биржа (ISS API)  
-      Материал не является инвестиционной рекомендацией
+    <footer class="footer">
+      Источник данных: Московская биржа (ISS API).  
+      Материал носит информационный характер.
     </footer>
 
   </main>
 </div>
 
-<script src="app.js"></script>
+<script src="up.js"></script>
 </body>
 </html>
