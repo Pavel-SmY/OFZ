@@ -3,284 +3,205 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Как выбрать ОФЗ</title>
+  <title>ОФЗ — данные Московской биржи</title>
+
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
   <div class="container">
-    <h1>Как выбрать облигации федерального займа (ОФЗ)</h1>
+    <h1>Облигации федерального займа (ОФЗ)</h1>
 
     <p class="intro">
-      Эта страница — краткое и практичное руководство для частного инвестора,
-      который хочет разобраться, как выбирать ОФЗ осознанно, а не наугад.
+      На этой странице отображаются реальные данные по ОФЗ,
+      полученные напрямую с Московской биржи.
+      Инструменты предназначены для обучения и первичного анализа.
     </p>
 
+    <!-- ================= СПИСОК ОФЗ ================= -->
+
     <section>
-      <h2>Что такое ОФЗ</h2>
-      <p>
-        Облигации федерального займа — это государственные облигации Российской Федерации.
-        Покупая ОФЗ, инвестор фактически даёт деньги в долг государству
-        и получает фиксированный или переменный доход.
+      <h2>Список ОФЗ (MOEX)</h2>
+
+      <table id="ofzTable">
+        <thead>
+          <tr>
+            <th>Код</th>
+            <th>Название</th>
+            <th>Погашение</th>
+            <th>Купон</th>
+            <th>Выбрать</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="5">Загрузка данных…</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="note">
+        Источник: MOEX ISS API. Данные обновляются автоматически.
       </p>
     </section>
 
-    <section>
-      <h2>На что стоит смотреть при выборе ОФЗ</h2>
-      <ul>
-        <li><strong>Доходность к погашению</strong> — сколько вы заработаете, если держать облигацию до конца.</li>
-        <li><strong>Срок до погашения</strong> — чем он длиннее, тем выше чувствительность к ставкам.</li>
-        <li><strong>Тип купона</strong> — фиксированный или плавающий.</li>
-        <li><strong>Ликвидность</strong> — насколько легко продать облигацию.</li>
-      </ul>
-    </section>
+    <!-- ================= КАЛЬКУЛЯТОР ================= -->
 
     <section>
-      <h2>Основные типы ОФЗ</h2>
-      <ul>
-        <li>ОФЗ-ПД — с постоянным купоном</li>
-        <li>ОФЗ-ПК — с плавающим купоном</li>
-        <li>ОФЗ-ИН — с защитой от инфляции</li>
-      </ul>
+      <h2>Калькулятор доходности выбранной ОФЗ</h2>
+
+      <div class="calculator">
+        <label>
+          Цена (% от номинала)
+          <input type="number" id="price" value="95" step="0.1">
+        </label>
+
+        <label>
+          Купон (% годовых)
+          <input type="number" id="coupon" value="0" step="0.01" readonly>
+        </label>
+
+        <label>
+          Срок до погашения (лет)
+          <input type="number" id="years" value="0" readonly>
+        </label>
+
+        <button id="calcBtn">Рассчитать доходность</button>
+        <div class="result" id="result"></div>
+      </div>
+
+      <p class="note">
+        ⚠️ Доходность рассчитывается по упрощённой формуле и не является официальной YTM.
+      </p>
     </section>
+
+    <!-- ================= ГРАФИК ================= -->
+
     <section>
-        <h2>Примеры облигаций федерального займа</h2>
-        <p>
-          Ниже — несколько примеров ОФЗ, которые часто рассматривают начинающие инвесторы.
-          Данные приведены для примера, чтобы понять логику выбора.
-        </p>
-      
-        <table>
-          <thead>
-            <tr>
-              <th>ОФЗ</th>
-              <th>Тип</th>
-              <th>Погашение</th>
-              <th>Купон</th>
-              <th>YTM</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>ОФЗ 26238</td>
-              <td>Постоянный</td>
-              <td>2031</td>
-              <td>7.1%</td>
-              <td>12.4%</td>
-            </tr>
-            <tr>
-              <td>ОФЗ 26240</td>
-              <td>Постоянный</td>
-              <td>2036</td>
-              <td>6.9%</td>
-              <td>13.0%</td>
-            </tr>
-            <tr>
-              <td>ОФЗ 29012</td>
-              <td>Переменный</td>
-              <td>2028</td>
-              <td>RUONIA</td>
-              <td>11.8%</td>
-            </tr>
-            <tr>
-              <td>ОФЗ-ИН 52004</td>
-              <td>С защитой от инфляции</td>
-              <td>2030</td>
-              <td>2.5% + инфляция</td>
-              <td>9.6%</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-      <section>
-        <h2>Как срок до погашения влияет на доходность</h2>
-        <p>
-          На графике ниже показано, как меняется доходность облигаций федерального займа
-          в зависимости от срока до погашения.
-        </p>
-      
-        <canvas id="ytmChart" width="400" height="200"></canvas>
-      </section>
-      <section>
-        <h2>Кривая доходности ОФЗ (упрощённо)</h2>
-      
-        <p>
-          Кривая доходности показывает, какую доходность предлагает рынок
-          для облигаций с разным сроком до погашения.
-        </p>
-      
-        <p>
-          Ниже представлена <strong>упрощённая кривая доходности ОФЗ</strong>,
-          построенная на основе доходностей к погашению (YTM) для разных сроков.
-        </p>
-      
-        <canvas id="yieldCurveChart" width="400" height="200"></canvas>
-      
-        <p class="note">
-          ⚠️ Кривая построена в учебных целях и не является официальной
-          бескупонной кривой Банка России.
-        </p>
-      </section>
-      <section>
-        <h2>Простой калькулятор доходности ОФЗ</h2>
-      
-        <p>
-          Этот калькулятор помогает оценить доходность облигации федерального займа
-          при покупке по текущей цене.
-          Расчёт является упрощённым и предназначен для обучения.
-        </p>
-      
-        <div class="calculator">
-          <label>
-            Цена облигации (% от номинала)
-            <input type="number" id="price" value="95" step="0.1">
-          </label>
-      
-          <label>
-            Купон (% годовых)
-            <input type="number" id="coupon" value="7" step="0.1">
-          </label>
-      
-          <label>
-            Срок до погашения (лет)
-            <input type="number" id="years" value="5">
-          </label>
-      
-          <button onclick="calculateYield()">Рассчитать доходность</button>
-      
-          <div class="result" id="result"></div>
-        </div>
-      
-        <p class="note">
-          ⚠️ Расчёт упрощён и не учитывает реинвестирование купонов и налоги.
-        </p>
-      </section>
+      <h2>Кривая доходности ОФЗ (оценка)</h2>
+      <canvas id="yieldCurveChart"></canvas>
+      <p class="note">
+        График построен на основе оценочной доходности по выбранным ОФЗ.
+      </p>
+    </section>
+
     <footer>
       <p class="disclaimer">
         Материал носит информационный характер и не является инвестиционной рекомендацией.
       </p>
     </footer>
   </div>
+
+  <!-- ================= JS ================= -->
+
   <script>
-    const ctx = document.getElementById('ytmChart').getContext('2d');
-  
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['2028', '2030', '2031', '2036'],
-        datasets: [{
-          label: 'Доходность YTM, %',
-          data: [11.8, 9.6, 12.4, 13.0],
-          borderColor: '#2563eb',
-          backgroundColor: 'rgba(37, 99, 235, 0.1)',
-          tension: 0.3,
-          fill: true,
-          pointRadius: 5,
-          pointBackgroundColor: '#2563eb'
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return context.parsed.y + '% годовых';
-              }
-            }
-          }
-        },
-        scales: {
-          y: {
-            title: {
-              display: true,
-              text: 'Доходность, %'
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Год погашения'
-            }
-          }
-        }
-      }
-    });
-  </script>
-  <script>
-    const curveCtx = document.getElementById('yieldCurveChart').getContext('2d');
-  
-    new Chart(curveCtx, {
-      type: 'line',
-      data: {
-        labels: ['1 год', '3 года', '5 лет', '7 лет', '10 лет'],
-        datasets: [{
-          label: 'Доходность ОФЗ, % годовых',
-          data: [10.2, 11.3, 12.1, 12.7, 13.0],
-          borderColor: '#16a34a',
-          backgroundColor: 'rgba(22, 163, 74, 0.15)',
-          tension: 0.35,
-          fill: true,
-          pointRadius: 5,
-          pointBackgroundColor: '#16a34a'
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return context.parsed.y + '% годовых';
-              }
-            }
-          }
-        },
-        scales: {
-          y: {
-            title: {
-              display: true,
-              text: 'Доходность, %'
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Срок до погашения'
-            }
-          }
-        }
-      }
-    });
-  </script>
-  <script>
-    function calculateYield() {
-      const price = parseFloat(document.getElementById('price').value);
-      const coupon = parseFloat(document.getElementById('coupon').value);
-      const years = parseInt(document.getElementById('years').value);
-  
-      if (price <= 0 || coupon < 0 || years <= 0) {
-        document.getElementById('result').innerText =
-          'Пожалуйста, введите корректные значения.';
-        return;
-      }
-  
-      const nominal = 100;
-      const annualCoupon = (coupon / 100) * nominal;
-  
-      // Упрощённая формула оценки доходности
-      const approximateYield =
-        (annualCoupon + (nominal - price) / years) / ((nominal + price) / 2) * 100;
-  
-      document.getElementById('result').innerText =
-        `Оценочная доходность: ${approximateYield.toFixed(2)}% годовых`;
+    const ofzTableBody = document.querySelector('#ofzTable tbody');
+    const couponInput = document.getElementById('coupon');
+    const yearsInput = document.getElementById('years');
+    const priceInput = document.getElementById('price');
+    const resultDiv = document.getElementById('result');
+
+    let yieldChart;
+    const curveData = [];
+
+    // ===== ЗАГРУЗКА ОФЗ =====
+    async function loadOFZ() {
+      const url =
+        'https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json';
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      const cols = data.securities.columns;
+      const rows = data.securities.data;
+
+      const iSec = cols.indexOf('SECID');
+      const iName = cols.indexOf('SHORTNAME');
+      const iMat = cols.indexOf('MATDATE');
+      const iCoupon = cols.indexOf('COUPONPERCENT');
+
+      ofzTableBody.innerHTML = '';
+
+      rows.slice(0, 20).forEach(r => {
+        const maturity = r[iMat];
+        const years =
+          maturity
+            ? Math.max(
+                1,
+                Math.round(
+                  (new Date(maturity) - new Date()) /
+                  (365 * 24 * 60 * 60 * 1000)
+                )
+              )
+            : null;
+
+        ofzTableBody.innerHTML += `
+          <tr>
+            <td>${r[iSec]}</td>
+            <td>${r[iName]}</td>
+            <td>${maturity || '—'}</td>
+            <td>${r[iCoupon] ?? '—'}</td>
+            <td>
+              <button onclick="selectOFZ(${r[iCoupon] || 0}, ${years || 1})">
+                Выбрать
+              </button>
+            </td>
+          </tr>`;
+      });
     }
+
+    // ===== ВЫБОР ОФЗ =====
+    function selectOFZ(coupon, years) {
+      couponInput.value = coupon;
+      yearsInput.value = years;
+      resultDiv.innerText = 'ОФЗ выбрана. Нажмите «Рассчитать доходность».';
+    }
+
+    // ===== КАЛЬКУЛЯТОР =====
+    document.getElementById('calcBtn').addEventListener('click', () => {
+      const price = +priceInput.value;
+      const coupon = +couponInput.value;
+      const years = +yearsInput.value;
+
+      const nominal = 100;
+      const annualCoupon = coupon / 100 * nominal;
+
+      const y =
+        (annualCoupon + (nominal - price) / years) /
+        ((nominal + price) / 2) * 100;
+
+      resultDiv.innerText = `Оценочная доходность: ${y.toFixed(2)}% годовых`;
+
+      curveData.push({ years, y });
+      updateCurve();
+    });
+
+    // ===== ГРАФИК =====
+    function updateCurve() {
+      const labels = curveData.map(p => `${p.years} лет`);
+      const values = curveData.map(p => p.y);
+
+      if (yieldChart) yieldChart.destroy();
+
+      yieldChart = new Chart(
+        document.getElementById('yieldCurveChart'),
+        {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Доходность, %',
+              data: values,
+              borderColor: '#2563eb',
+              fill: false
+            }]
+          }
+        }
+      );
+    }
+
+    loadOFZ();
   </script>
 </body>
 </html>
