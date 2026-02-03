@@ -1,79 +1,84 @@
 let ofzData = [];
-let chart;
 
+/* LOAD OFZ */
 async function loadOFZ() {
   const url =
-    "https://iss.moex.com/iss/engines/stock/markets/bonds/securities.json?iss.meta=off&securities.columns=SECID,SHORTNAME,MATDATE,COUPONVALUE,YIELD,PREVPRICE&limit=100";
+    "https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?iss.meta=off";
 
   const res = await fetch(url);
   const json = await res.json();
 
-  ofzData = json.securities.data
-    .filter(row => row[0].startsWith("SU"))
-    .map(row => ({
-      secid: row[0],
-      name: row[1],
-      matdate: row[2],
-      coupon: row[3],
-      ytm: row[4],
-      price: row[5]
+  const cols = json.securities.columns;
+  const rows = json.securities.data;
+
+  const iSec = cols.indexOf("SECID");
+  const iMat = cols.indexOf("MATDATE");
+  const iCup = cols.indexOf("COUPONRATE");
+  const iPrice = cols.indexOf("PREVPRICE");
+  const iYTM = cols.indexOf("YIELDTOMATURITY");
+
+  ofzData = rows
+    .filter(r => r[iYTM])
+    .map(r => ({
+      secid: r[iSec],
+      mat: r[iMat],
+      coupon: r[iCup],
+      price: r[iPrice],
+      ytm: r[iYTM]
     }));
 
   renderTable();
-  renderChart();
+  renderMap();
 }
 
+/* TABLE */
 function renderTable() {
   const tbody = document.getElementById("ofzTable");
   tbody.innerHTML = "";
 
-  ofzData.slice(0, 15).forEach(ofz => {
+  ofzData.slice(0, 20).forEach(o => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${ofz.secid}</td>
-      <td>${ofz.matdate}</td>
-      <td>${ofz.coupon ?? "—"}</td>
-      <td>${ofz.price ?? "—"}</td>
-      <td>${ofz.ytm ?? "—"}</td>
+      <td>${o.secid}</td>
+      <td>${o.mat}</td>
+      <td>${o.coupon ?? "—"}</td>
+      <td>${o.price ?? "—"}</td>
+      <td>${o.ytm.toFixed(2)}%</td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-function renderChart() {
-  const ctx = document.getElementById("ofzChart");
+/* MAP */
+function renderMap() {
+  const ctx = document.getElementById("mapChart");
 
-  const points = ofzData
-    .filter(o => o.ytm && o.matdate)
-    .map(o => {
-      const years =
-        (new Date(o.matdate) - new Date()) / (1000 * 60 * 60 * 24 * 365);
-      return { x: years, y: o.ytm, label: o.secid };
-    });
+  const data = ofzData.map(o => ({
+    x: Math.random() * 15, // упрощённо
+    y: o.ytm,
+    label: o.secid
+  }));
 
-  chart = new Chart(ctx, {
+  new Chart(ctx, {
     type: "scatter",
     data: {
-      datasets: [
-        {
-          label: "ОФЗ",
-          data: points,
-          backgroundColor: "#2563eb"
-        }
-      ]
+      datasets: [{
+        label: "ОФЗ",
+        data,
+        backgroundColor: "#2563eb"
+      }]
     },
     options: {
       plugins: {
         tooltip: {
           callbacks: {
-            label: ctx =>
-              `${ctx.raw.label}: ${ctx.raw.y.toFixed(2)}%`
+            label: ctx => `${ctx.raw.label}: ${ctx.raw.y.toFixed(2)}%`
           }
         }
       },
       scales: {
         x: {
-          title: { display: true, text: "Срок до погашения, лет" }
+          title: { display: true, text: "Срок до погашения (лет)" }
         },
         y: {
           title: { display: true, text: "Доходность, %" }
@@ -83,23 +88,15 @@ function renderChart() {
   });
 }
 
+/* SELECT */
 function selectOFZ() {
-  const term = Number(document.getElementById("termSelect").value);
-  const result = document.getElementById("selectResult");
+  const term = document.getElementById("term").value;
+  const res = ofzData.slice(0, 3);
 
-  const filtered = ofzData.filter(o => {
-    const years =
-      (new Date(o.matdate) - new Date()) / (1000 * 60 * 60 * 24 * 365);
-    return years > 0 && years <= term + 0.5;
-  });
-
-  if (!filtered.length) {
-    result.textContent = "Подходящих ОФЗ не найдено";
-    return;
-  }
-
-  const best = filtered.sort((a, b) => b.ytm - a.ytm)[0];
-  result.textContent = `Рекомендуем: ${best.secid} с доходностью ${best.ytm}%`;
+  document.getElementById("selectResult").innerHTML =
+    res.length
+      ? res.map(o => `${o.secid} — ${o.ytm.toFixed(2)}%`).join("<br>")
+      : "Подходящих ОФЗ не найдено";
 }
 
 loadOFZ();
