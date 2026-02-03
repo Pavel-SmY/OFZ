@@ -2,8 +2,8 @@ let ofzData = [];
 
 /* LOAD OFZ */
 async function loadOFZ() {
-  // Берём данные через свой бэкенд-прокси, чтобы обойти CORS
-  const url = "/api/ofz";
+  // Для GitHub Pages и любой статики берём данные из ofz-data.json (обновляется скриптом/CI)
+  const url = "ofz-data.json";
 
   const tbody = document.getElementById("ofzTable");
 
@@ -43,7 +43,7 @@ async function loadOFZ() {
       tbody.innerHTML = `
         <tr>
           <td colspan="5">
-            Не удалось загрузить данные с MOEX (скорее всего, блокировка CORS в браузере).
+            Не удалось загрузить локальный файл с данными ofz-data.json.
           </td>
         </tr>`;
     }

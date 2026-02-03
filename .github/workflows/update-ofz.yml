@@ -1,0 +1,33 @@
+name: Update OFZ data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *" # раз в 6 часов
+
+permissions:
+  contents: write
+
+jobs:
+  update-ofz:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch OFZ data from MOEX
+        run: |
+          curl -s "https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?iss.meta=off" > ofz-data.json
+
+      - name: Commit and push updated data
+        run: |
+          if git diff --quiet ofz-data.json; then
+            echo "No changes in ofz-data.json"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ofz-data.json
+          git commit -m "chore: update ofz-data.json"
+          git push
+
