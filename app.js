@@ -1,121 +1,123 @@
-let ofzPoints = [];
+let ofzData = [];
 
+/* Загрузка ОФЗ */
 async function loadOFZ() {
   const url =
-    'https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json' +
-    '?iss.meta=off&iss.only=securities,marketdata' +
-    '&securities.columns=SECID,MATDATE,COUPONPERCENT' +
-    '&marketdata.columns=SECID,LAST,YIELD';
+    'https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?iss.meta=off';
 
   const res = await fetch(url);
-  const data = await res.json();
+  const json = await res.json();
 
-  const sec = data.securities.data;
-  const md = data.marketdata.data;
+  const cols = json.securities.columns;
+  const rows = json.securities.data;
 
-  const mdMap = {};
-  md.forEach(r => mdMap[r[0]] = r);
+  const i = name => cols.indexOf(name);
 
-  const tbody = document.getElementById('ofzTable');
-  tbody.innerHTML = '';
+  ofzData = rows
+    .filter(r => r[i('SECID')].startsWith('SU'))
+    .map(r => ({
+      secid: r[i('SECID')],
+      matdate: r[i('MATDATE')],
+      coupon: r[i('COUPONRATE')],
+      price: r[i('PREVPRICE')],
+      ytm: r[i('YIELD')]
+    }))
+    .filter(o => o.ytm);
 
-  const now = new Date();
-
-  sec.forEach(s => {
-    const mdRow = mdMap[s[0]];
-    if (!mdRow || !mdRow[2]) return;
-
-    const years =
-      (new Date(s[1]) - now) / (1000 * 60 * 60 * 24 * 365);
-
-    ofzPoints.push({
-      x: years,
-      y: mdRow[2],
-      label: s[0]
-    });
-
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${s[0]}</td>
-      <td>${s[1]}</td>
-      <td>${s[2] ?? '—'}</td>
-      <td>${mdRow[1] ?? '—'}</td>
-      <td>${mdRow[2].toFixed(2)}%</td>
-    `;
-    tbody.appendChild(tr);
-  });
-
+  renderTable();
   buildMap();
 }
 
-function buildMap() {
-  const ctx = document.getElementById('mapChart');
+/* Таблица */
+function renderTable() {
+  const tbody = document.getElementById('ofzTable');
+  tbody.innerHTML = '';
 
-  new Chart(ctx, {
+  ofzData.slice(0, 15).forEach(o => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${o.secid}</td>
+        <td>${o.matdate || '—'}</td>
+        <td>${o.coupon || '—'}</td>
+        <td>${o.price || '—'}</td>
+        <td>${o.ytm.toFixed(2)}%</td>
+      </tr>
+    `;
+  });
+}
+
+/* Карта доходности */
+function buildMap() {
+  const points = ofzData.map(o => {
+    const years =
+      (new Date(o.matdate) - new Date()) / (365 * 24 * 3600 * 1000);
+    return { x: years, y: o.ytm };
+  });
+
+  new Chart(document.getElementById('mapChart'), {
     type: 'scatter',
     data: {
       datasets: [{
         label: 'ОФЗ',
-        data: ofzPoints,
+        data: points,
         backgroundColor: '#4f46e5'
       }]
     },
     options: {
       scales: {
-        x: { title: { display: true, text: 'Срок до погашения (лет)' } },
+        x: { title: { display: true, text: 'Срок (лет)' } },
         y: { title: { display: true, text: 'YTM, %' } }
       }
     }
   });
 }
 
-async function buildCBRCurve() {
-  const res = await fetch('https://www.cbr.ru/hd_base/zcyc_params/zcyc/');
-  const html = await res.text();
-  const doc = new DOMParser().parseFromString(html, 'text/html');
+/* Кривая ЦБ (MOEX ZCYC) */
+async function buildCurve() {
+  const url =
+    'https://iss.moex.com/iss/statistics/engines/stock/zcyc.json?iss.meta=off';
 
-  const rows = doc.querySelectorAll('table tr');
-  const labels = [];
-  const values = [];
+  const res = await fetch(url);
+  const json = await res.json();
 
-  rows.forEach((r, i) => {
-    if (i === 0) return;
-    const td = r.querySelectorAll('td');
-    if (td.length >= 2) {
-      labels.push(td[0].innerText);
-      values.push(parseFloat(td[1].innerText.replace(',', '.')));
-    }
-  });
+  const rows = json.zcyc.data;
+  const cols = json.zcyc.columns;
+
+  const t = cols.indexOf('TERM');
+  const v = cols.indexOf('VALUE');
 
   new Chart(document.getElementById('curveChart'), {
     type: 'line',
     data: {
-      labels,
+      labels: rows.map(r => r[t]),
       datasets: [{
-        label: 'Кривая доходности ЦБ',
-        data: values,
-        borderColor: '#16a34a'
+        label: 'Кривая ЦБ РФ',
+        data: rows.map(r => r[v]),
+        borderColor: '#16a34a',
+        fill: true,
+        backgroundColor: 'rgba(22,163,74,0.15)'
       }]
     }
   });
 }
 
-document.getElementById('pickBtn').onclick = () => {
-  const term = document.getElementById('term').value;
-  const result = document.getElementById('pickResult');
+/* Подбор */
+function selectOFZ() {
+  const years = Number(document.getElementById('termSelect').value);
+  const now = new Date();
 
-  let filtered = ofzPoints.filter(p =>
-    term == 1 ? p.x <= 1 :
-    term == 3 ? p.x <= 3 :
-    term == 5 ? p.x <= 5 : p.x > 5
-  );
+  const filtered = ofzData.filter(o => {
+    const y =
+      (new Date(o.matdate) - now) / (365 * 24 * 3600 * 1000);
+    return y <= years;
+  });
 
-  filtered = filtered.sort((a,b)=>b.y-a.y).slice(0,3);
+  document.getElementById('selectResult').innerText =
+    filtered.length
+      ? `Найдено выпусков: ${filtered.length}`
+      : 'Подходящих ОФЗ не найдено';
+}
 
-  result.innerHTML = filtered.length
-    ? filtered.map(p => `${p.label}: ${p.y.toFixed(2)}%`).join('<br>')
-    : 'Нет подходящих выпусков';
-};
-
+/* INIT */
 loadOFZ();
-buildCBRCurve();
+buildCurve();

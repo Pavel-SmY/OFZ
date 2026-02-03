@@ -3,124 +3,103 @@
 <head>
   <meta charset="UTF-8" />
   <title>ОФЗ — облигации федерального займа</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
+  <div class="layout">
 
-<div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <h2 class="logo">ОФЗ</h2>
+      <nav>
+        <a href="#overview">Обзор</a>
+        <a href="#catalog">Выпуски</a>
+        <a href="#map">Карта доходности</a>
+        <a href="#curve">Кривая ЦБ</a>
+        <a href="#select">Подбор</a>
+        <a href="#iis">ИИС</a>
+      </nav>
+    </aside>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="logo">ОФЗ</div>
-    <nav>
-      <a href="#overview">Обзор</a>
-      <a href="#catalog">Выпуски</a>
-      <a href="#map">Карта доходности</a>
-      <a href="#curve">Кривая ЦБ</a>
-      <a href="#picker">Подбор</a>
-      <a href="#iis">ИИС</a>
-      <a href="#sources">Источники</a>
-    </nav>
-  </aside>
+    <!-- MAIN -->
+    <main class="content">
 
-  <!-- MAIN -->
-  <main class="content">
+      <!-- OVERVIEW -->
+      <section id="overview" class="card">
+        <h1>Облигации федерального займа</h1>
 
-    <!-- OVERVIEW -->
-    <section id="overview">
-      <h1>Облигации федерального займа</h1>
-
-      <div class="cards">
-        <div class="card">
-          <span>Надёжность</span>
-          <strong>Госдолг РФ</strong>
+        <div class="stats">
+          <div class="stat"><span>Надёжность</span><b>Госдолг РФ</b></div>
+          <div class="stat"><span>Доход</span><b>Купоны</b></div>
+          <div class="stat"><span>Риск</span><b>Низкий</b></div>
+          <div class="stat"><span>Источник</span><b>MOEX</b></div>
         </div>
-        <div class="card">
-          <span>Доход</span>
-          <strong>Купоны</strong>
-        </div>
-        <div class="card">
-          <span>Риск</span>
-          <strong>Низкий</strong>
-        </div>
-        <div class="card">
-          <span>Источник</span>
-          <strong>MOEX</strong>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- CATALOG -->
-    <section id="catalog">
-      <h2>Каталог ОФЗ</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Выпуск</th>
-            <th>Погашение</th>
-            <th>Купон</th>
-            <th>Цена</th>
-            <th>YTM</th>
-          </tr>
-        </thead>
-        <tbody id="ofzTable">
-          <tr><td colspan="5">Загрузка данных…</td></tr>
-        </tbody>
-      </table>
-    </section>
+      <!-- CATALOG -->
+      <section id="catalog" class="card">
+        <h2>Каталог ОФЗ</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Выпуск</th>
+              <th>Погашение</th>
+              <th>Купон</th>
+              <th>Цена</th>
+              <th>YTM</th>
+            </tr>
+          </thead>
+          <tbody id="ofzTable">
+            <tr><td colspan="5">Загрузка данных…</td></tr>
+          </tbody>
+        </table>
+      </section>
 
-    <!-- MAP -->
-    <section id="map">
-      <h2>Карта ОФЗ</h2>
-      <canvas id="mapChart"></canvas>
-    </section>
+      <!-- MAP -->
+      <section id="map" class="card">
+        <h2>Карта доходности ОФЗ</h2>
+        <canvas id="mapChart"></canvas>
+      </section>
 
-    <!-- CURVE -->
-    <section id="curve">
-      <h2>Кривая доходности ЦБ РФ</h2>
-      <canvas id="curveChart"></canvas>
-    </section>
+      <!-- CURVE -->
+      <section id="curve" class="card">
+        <h2>Кривая доходности ЦБ РФ</h2>
+        <canvas id="curveChart"></canvas>
+      </section>
 
-    <!-- PICKER -->
-    <section id="picker">
-      <h2>Подбор ОФЗ</h2>
-
-      <div class="picker">
-        <select id="term">
+      <!-- SELECT -->
+      <section id="select" class="card">
+        <h2>Подбор ОФЗ</h2>
+        <select id="termSelect">
           <option value="1">До 1 года</option>
-          <option value="3">1–3 года</option>
-          <option value="5">3–5 лет</option>
-          <option value="10">Более 5 лет</option>
+          <option value="3">До 3 лет</option>
+          <option value="5">До 5 лет</option>
+          <option value="10">До 10 лет</option>
         </select>
+        <button onclick="selectOFZ()">Подобрать</button>
+        <div id="selectResult"></div>
+      </section>
 
-        <button id="pickBtn">Подобрать</button>
-      </div>
+      <!-- IIS -->
+      <section id="iis" class="card">
+        <h2>ИИС и налоговые льготы</h2>
+        <p>
+          Купонный доход по ОФЗ облагается НДФЛ 13%.  
+          При использовании ИИС типа А можно вернуть до <b>52 000 ₽</b> в год.
+        </p>
+      </section>
 
-      <div id="pickResult" class="result"></div>
-    </section>
+      <footer class="footer">
+        Источники данных: Московская биржа (ISS API)
+      </footer>
 
-    <!-- IIS -->
-    <section id="iis">
-      <h2>ИИС и налоговые льготы</h2>
-      <p>
-        Купонный доход по ОФЗ облагается НДФЛ 13%.  
-        При использовании ИИС типа А можно вернуть до 52 000 ₽ в год.
-      </p>
-    </section>
+    </main>
+  </div>
 
-    <!-- SOURCES -->
-    <section id="sources">
-      <p class="sources">
-        Источники данных: Московская биржа (ISS API), Банк России
-      </p>
-    </section>
-
-  </main>
-</div>
-
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
