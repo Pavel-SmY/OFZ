@@ -1,6 +1,8 @@
 let ofzData = [];
 
-/* Загрузка ОФЗ */
+/* =======================
+   ЗАГРУЗКА ОФЗ (MOEX)
+======================= */
 async function loadOFZ() {
   const url =
     'https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?iss.meta=off';
@@ -14,7 +16,7 @@ async function loadOFZ() {
   const i = name => cols.indexOf(name);
 
   ofzData = rows
-    .filter(r => r[i('SECID')].startsWith('SU'))
+    .filter(r => r[i('SECID')] && r[i('SECID')].startsWith('SU'))
     .map(r => ({
       secid: r[i('SECID')],
       matdate: r[i('MATDATE')],
@@ -22,37 +24,43 @@ async function loadOFZ() {
       price: r[i('PREVPRICE')],
       ytm: r[i('YIELD')]
     }))
-    .filter(o => o.ytm);
+    .filter(o => o.ytm && o.matdate);
 
   renderTable();
   buildMap();
 }
 
-/* Таблица */
+/* =======================
+   ТАБЛИЦА
+======================= */
 function renderTable() {
   const tbody = document.getElementById('ofzTable');
   tbody.innerHTML = '';
 
-  ofzData.slice(0, 15).forEach(o => {
+  ofzData.slice(0, 20).forEach(o => {
     tbody.innerHTML += `
       <tr>
         <td>${o.secid}</td>
-        <td>${o.matdate || '—'}</td>
-        <td>${o.coupon || '—'}</td>
-        <td>${o.price || '—'}</td>
+        <td>${o.matdate}</td>
+        <td>${o.coupon ?? '—'}</td>
+        <td>${o.price ?? '—'}</td>
         <td>${o.ytm.toFixed(2)}%</td>
       </tr>
     `;
   });
 }
 
-/* Карта доходности */
+/* =======================
+   КАРТА ДОХОДНОСТИ ОФЗ
+======================= */
 function buildMap() {
+  const now = new Date();
+
   const points = ofzData.map(o => {
     const years =
-      (new Date(o.matdate) - new Date()) / (365 * 24 * 3600 * 1000);
+      (new Date(o.matdate) - now) / (365 * 24 * 3600 * 1000);
     return { x: years, y: o.ytm };
-  });
+  }).filter(p => p.x > 0 && p.x < 30);
 
   new Chart(document.getElementById('mapChart'), {
     type: 'scatter',
@@ -65,43 +73,73 @@ function buildMap() {
     },
     options: {
       scales: {
-        x: { title: { display: true, text: 'Срок (лет)' } },
-        y: { title: { display: true, text: 'YTM, %' } }
+        x: {
+          title: { display: true, text: 'Срок до погашения, лет' }
+        },
+        y: {
+          title: { display: true, text: 'Доходность YTM, %' }
+        }
       }
     }
   });
 }
 
-/* Кривая ЦБ (MOEX ZCYC) */
+/* =======================
+   КРИВАЯ ДОХОДНОСТИ ЦБ РФ
+   (MOEX ZCYC — РАБОЧАЯ)
+======================= */
 async function buildCurve() {
   const url =
-    'https://iss.moex.com/iss/statistics/engines/stock/zcyc.json?iss.meta=off';
+    'https://iss.moex.com/iss/statistics/engines/stock/zcyc/params.json?iss.meta=off';
 
   const res = await fetch(url);
   const json = await res.json();
 
-  const rows = json.zcyc.data;
-  const cols = json.zcyc.columns;
+  const cols = json.params.columns;
+  const rows = json.params.data;
 
   const t = cols.indexOf('TERM');
   const v = cols.indexOf('VALUE');
 
+  const terms = [];
+  const values = [];
+
+  rows.forEach(r => {
+    if (r[t] && r[v]) {
+      terms.push(r[t]);
+      values.push(r[v]);
+    }
+  });
+
   new Chart(document.getElementById('curveChart'), {
     type: 'line',
     data: {
-      labels: rows.map(r => r[t]),
+      labels: terms,
       datasets: [{
-        label: 'Кривая ЦБ РФ',
-        data: rows.map(r => r[v]),
+        label: 'Кривая доходности ЦБ РФ',
+        data: values,
         borderColor: '#16a34a',
+        backgroundColor: 'rgba(22,163,74,0.15)',
         fill: true,
-        backgroundColor: 'rgba(22,163,74,0.15)'
+        tension: 0.35
       }]
+    },
+    options: {
+      scales: {
+        x: {
+          title: { display: true, text: 'Срок, лет' }
+        },
+        y: {
+          title: { display: true, text: 'Доходность, %' }
+        }
+      }
     }
   });
 }
 
-/* Подбор */
+/* =======================
+   ПОДБОР ОФЗ
+======================= */
 function selectOFZ() {
   const years = Number(document.getElementById('termSelect').value);
   const now = new Date();
@@ -109,15 +147,17 @@ function selectOFZ() {
   const filtered = ofzData.filter(o => {
     const y =
       (new Date(o.matdate) - now) / (365 * 24 * 3600 * 1000);
-    return y <= years;
+    return y <= years && y > 0;
   });
 
   document.getElementById('selectResult').innerText =
     filtered.length
-      ? `Найдено выпусков: ${filtered.length}`
+      ? `Подходящих выпусков: ${filtered.length}`
       : 'Подходящих ОФЗ не найдено';
 }
 
-/* INIT */
+/* =======================
+   INIT
+======================= */
 loadOFZ();
 buildCurve();
