@@ -2,33 +2,52 @@ let ofzData = [];
 
 /* LOAD OFZ */
 async function loadOFZ() {
-  const url =
-    "https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?iss.meta=off";
+  // Берём данные через свой бэкенд-прокси, чтобы обойти CORS
+  const url = "/api/ofz";
 
-  const res = await fetch(url);
-  const json = await res.json();
+  const tbody = document.getElementById("ofzTable");
 
-  const cols = json.securities.columns;
-  const rows = json.securities.data;
+  try {
+    const res = await fetch(url);
 
-  const iSec = cols.indexOf("SECID");
-  const iMat = cols.indexOf("MATDATE");
-  const iCup = cols.indexOf("COUPONRATE");
-  const iPrice = cols.indexOf("PREVPRICE");
-  const iYTM = cols.indexOf("YIELDTOMATURITY");
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
 
-  ofzData = rows
-    .filter(r => r[iYTM])
-    .map(r => ({
-      secid: r[iSec],
-      mat: r[iMat],
-      coupon: r[iCup],
-      price: r[iPrice],
-      ytm: r[iYTM]
-    }));
+    const json = await res.json();
 
-  renderTable();
-  renderMap();
+    const cols = json.securities.columns;
+    const rows = json.securities.data;
+
+    const iSec = cols.indexOf("SECID");
+    const iMat = cols.indexOf("MATDATE");
+    const iCup = cols.indexOf("COUPONRATE");
+    const iPrice = cols.indexOf("PREVPRICE");
+    const iYTM = cols.indexOf("YIELDTOMATURITY");
+
+    ofzData = rows
+      .filter(r => r[iYTM])
+      .map(r => ({
+        secid: r[iSec],
+        mat: r[iMat],
+        coupon: r[iCup],
+        price: r[iPrice],
+        ytm: r[iYTM]
+      }));
+
+    renderTable();
+    renderMap();
+  } catch (err) {
+    console.error("Ошибка загрузки ОФЗ:", err);
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5">
+            Не удалось загрузить данные с MOEX (скорее всего, блокировка CORS в браузере).
+          </td>
+        </tr>`;
+    }
+  }
 }
 
 /* TABLE */
