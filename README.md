@@ -6,3 +6,6 @@ git status
 git add .
 git commit -m "описание изменений"
 git push
+
+https://pavel-smy.github.io/OFZ/
+
