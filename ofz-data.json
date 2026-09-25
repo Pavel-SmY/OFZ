@@ -136,7 +136,7 @@
 "dataversion": {
 	"columns": ["data_version", "seqnum", "trade_date", "trade_session_date"], 
 	"data": [
-		[8962, 20260925000000, "2026-09-24", "2026-09-24"]
+		[8962, 20260925000500, "2026-09-24", "2026-09-24"]
 	]
 },
 "marketdata_yields": {
