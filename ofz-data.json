@@ -134,7 +134,7 @@
 "dataversion": {
 	"columns": ["data_version", "seqnum", "trade_date", "trade_session_date"], 
 	"data": [
-		[8988, 20261019235959, "2026-10-19", "2026-10-19"]
+		[8988, 20261020000500, "2026-10-19", "2026-10-19"]
 	]
 },
 "marketdata_yields": {
